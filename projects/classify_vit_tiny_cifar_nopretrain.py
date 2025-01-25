@@ -13,17 +13,17 @@ class Exp(BaseExp):
         # ------------------------------- Basic Config ------------------------------ #
         self.checkpoint_file = ""
         self.exp_name = "vit"
-        self.save_folder_name = "moco_vit_tiny_cifar_finetune"
+        self.save_folder_name = "moco_vit_tiny_cifar_nopretrain"
 
-        self.batch_size = 256
+        self.batch_size = 64
         self.max_epoch = 100
-        self.lr = 0.03
+        self.lr = 1e-3
         
         # ------------------------------- Model Config ------------------------------ #
         self.img_size = 224
 
         # ------------------------------- Train Config ------------------------------ #
-        self.warmup_lr = 1e-4
+        self.warmup_lr = 1e-5
         self.warmup_epochs = 5
         self.end_lr = 1e-6
         self.weight_decay = 1e-3
@@ -35,6 +35,7 @@ class Exp(BaseExp):
     def get_model(self):
         if "model" not in self.__dict__:
             self.model = vit_tiny_patch16(num_classes=100)
+            self.model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(self.model)
         return self.model
     
     def get_data_loader(self, train=True) -> DataLoader:
@@ -42,13 +43,15 @@ class Exp(BaseExp):
             if "train_dataloader" not in self.__dict__:
                 dataset = CIFAR100((self.img_size, self.img_size))
                 train_sampler = DistributedSampler(dataset)
-                self.train_dataloader = DataLoader(dataset, batch_size = self.batch_size, sampler=train_sampler)
+                self.train_dataloader = DataLoader(dataset, batch_size = self.batch_size, sampler=train_sampler, 
+                                                   pin_memory=True)
             return self.train_dataloader
         else:
             if "test_dataloader" not in self.__dict__:
                 dataset = CIFAR100((self.img_size, self.img_size), train=False)
                 test_sampler = DistributedSampler(dataset)
-                self.test_dataloader = DataLoader(dataset, batch_size = self.batch_size, sampler=test_sampler)
+                self.test_dataloader = DataLoader(dataset, batch_size = self.batch_size, sampler=test_sampler, 
+                                                  pin_memory=True)
             return self.test_dataloader
 
     def calc_loss(self, model_output, target):

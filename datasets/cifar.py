@@ -16,12 +16,12 @@ class CIFAR100(torchvision.datasets.CIFAR100):
                 transform = torchvision.transforms.Compose(
                     [
                         transforms.RandomResizedCrop(img_size, scale=(0.8, 1)),
-                        transforms.RandomApply([transforms.ColorJitter(0.4, 0.4, 0.2, 0.1)], p=0.8),
-                        transforms.RandomApply([GaussianBlur([0.1, 2.0])], p=1.0),
-                        transforms.RandomGrayscale(p=0.2),
+                        transforms.RandomApply([transforms.ColorJitter(0.2, 0.2, 0.2, 0.1)], p=0.8),
+                        # transforms.RandomApply([GaussianBlur([0.1, 2.0])], p=1.0),
+                        # transforms.RandomGrayscale(p=0.2),
                         transforms.RandomHorizontalFlip(),
                         transforms.ToTensor(),
-                        transforms.Normalize(mean=[0.4914, 0.4822, 0.4465], std=[0.2023, 0.1994, 0.2010]),
+                        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
                     ]
                 )
         else:
@@ -29,7 +29,7 @@ class CIFAR100(torchvision.datasets.CIFAR100):
                 [
                     transforms.Resize(img_size),
                     transforms.ToTensor(),
-                    transforms.Normalize(mean=[0.4914, 0.4822, 0.4465], std=[0.2023, 0.1994, 0.2010]),
+                    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
                 ]
             )
         self.transform_k = transform_k

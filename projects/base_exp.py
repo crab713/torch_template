@@ -62,12 +62,10 @@ class BaseExp:
         if os.path.exists(self.checkpoint_file):
             self.logger.info("加载checkpoint...")
             self.checkpoint = torch.load(self.checkpoint_file, weights_only=True)
-            self.get_model()
+            self.get_model().cuda()
             self.get_optimizer()
-            self.get_lr_scheduler()
             self.model.load_state_dict(self.checkpoint["model"])
             self.optimizer.load_state_dict(self.checkpoint["optimizer"])
-            self.scheduler.load_state_dict(self.checkpoint["scheduler"])
             self.last_epoch = self.checkpoint["epoch"] + 1
         else:
             self.last_epoch = 0
@@ -114,6 +112,7 @@ class BaseExp:
                 warmup_lr,
                 end_lr
             )
+            self.scheduler.step(len(self.get_data_loader()) * self.last_epoch)
         return self.scheduler
 
     def data_preprocess(self, inputs, target):
