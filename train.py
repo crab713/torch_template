@@ -148,7 +148,6 @@ def main(args:dict, rank:int, exp_args:dict):
 
         # ------------------------------------- dump weights ------------------------------ #
         synchronize()
-        exp.last_epoch += 1
         if rank == 0  and (epoch % 2 == 0 or epoch == exp.max_epoch - 1):
             ckpt = {
                 "model": model.module.state_dict(),
@@ -158,6 +157,7 @@ def main(args:dict, rank:int, exp_args:dict):
             for k, avgmeter in metric_avg.items():
                 ckpt[k] = avgmeter.avg
             torch.save(ckpt, "exp/{}/checkpoint/{}.pth".format(exp.save_folder_name, epoch))
+        exp.last_epoch += 1
 
 def parse_devices(gpu_ids):
     if "-" in gpu_ids:

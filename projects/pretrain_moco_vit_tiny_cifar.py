@@ -17,7 +17,7 @@ class Exp(BaseExp):
 
         self.batch_size = 128
         self.max_epoch = 50
-        self.lr = 0.01
+        self.lr = 1e-3
         
         # ------------------------------- Model Config ------------------------------ #
         self.img_size = 224
@@ -27,7 +27,7 @@ class Exp(BaseExp):
         # ------------------------------- Train Config ------------------------------ #
         self.warmup_lr = 1e-5
         self.warmup_epochs = 10
-        self.end_lr = 1e-6
+        self.end_lr = 1e-5
         self.weight_decay = 1e-3
 
         super(Exp, self).__init__(self.exp_name, self.save_folder_name, 
@@ -48,12 +48,10 @@ class Exp(BaseExp):
                     [
                         transforms.RandomResizedCrop(self.img_size, scale=(0.8, 1)),
                         transforms.RandomApply([transforms.ColorJitter(0.4, 0.4, 0.2, 0.1)], p=0.8),
-                        transforms.RandomApply([GaussianBlur([0.1, 2.0])], p=0.1),
-                        transforms.RandomGrayscale(p=0.2),
                         transforms.RandomHorizontalFlip(),
                         transforms.RandomApply([Solarization()], p=0.2),
                         transforms.ToTensor(),
-                        transforms.Normalize(mean=[0.4914, 0.4822, 0.4465], std=[0.2023, 0.1994, 0.2010]),
+                        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
                     ]
                 )
                 dataset = CIFAR100((self.img_size, self.img_size), transform_k=transform_k)
