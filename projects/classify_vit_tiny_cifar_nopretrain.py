@@ -13,7 +13,7 @@ class Exp(BaseExp):
         # ------------------------------- Basic Config ------------------------------ #
         self.checkpoint_file = ""
         self.exp_name = "vit"
-        self.save_folder_name = "moco_vit_tiny_cifar_nopretrain"
+        self.save_folder_name = "classify_vit_tiny_cifar_nopretrain"
 
         self.batch_size = 64
         self.max_epoch = 100
