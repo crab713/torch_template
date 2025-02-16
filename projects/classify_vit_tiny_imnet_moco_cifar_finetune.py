@@ -21,19 +21,19 @@ class Exp(BaseExp):
         # ------------------------------- Basic Config ------------------------------ #
         self.checkpoint_file = ""
         self.exp_name = "classify_vit"
-        self.save_folder_name = "classify_vit_tiny_cifar_moco_finetune"
-        self.pretrain_ckpt = "exp/moco_vit_tiny_cifar_pretrain/checkpoint/49.pth" # moco预训练模型, 如果checkpoint_file为空就从这加载
+        self.save_folder_name = "classify_vit_tiny_imnet_moco_cifar_finetune"
+        self.pretrain_ckpt = "exp/moco_vit_tiny_imnet_pretrain_ep100/checkpoint/99.pth" # moco预训练模型, 如果checkpoint_file为空就从这加载
         self.weights_prefix = "base_encoder."
 
-        self.batch_size = 64
+        self.batch_size = 128
         self.max_epoch = 100
-        self.lr = 1e-3
+        self.lr = 1e-4
         
         # ------------------------------- Model Config ------------------------------ #
         self.img_size = 224
 
         # ------------------------------- Train Config ------------------------------ #
-        self.warmup_lr = 1e-5
+        self.warmup_lr = 1e-6
         self.warmup_epochs = 5
         self.end_lr = 1e-6
         self.weight_decay = 1e-3
