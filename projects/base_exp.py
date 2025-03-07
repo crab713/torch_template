@@ -93,9 +93,9 @@ class BaseExp:
                 lr = self.lr
 
             self.optimizer = torch.optim.Adam(
-                self.get_model().parameters(),
-                lr=lr,
-                weight_decay=weight_decay,
+                filter(lambda p: p.requires_grad, self.model.parameters()), 
+                lr=lr, 
+                weight_decay=weight_decay
             )
         return self.optimizer
 
